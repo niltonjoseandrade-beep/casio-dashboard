@@ -27,16 +27,17 @@
       font-family: 'Share Tech Mono','Courier New',monospace;
     }
 
-    .watch {
-  width:92vw; height:88vh;
-  border-width:2px; border-style:solid; border-radius:6px;
+   .watch {
+  width:92vw;
+  height:88vh;
+  border-width:2px;
+  border-style:solid;
+  border-radius:6px;
   position:relative;
-  display:grid;
-  grid-template-columns: 3fr 1fr;
-  grid-template-rows: 1fr 2fr;
-  grid-template-areas:
-    "time weather"
-    "main agenda";
+  display:-webkit-flex;
+  display:flex;
+  -webkit-flex-direction:column;
+  flex-direction:column;
   overflow:hidden;
 }
 
@@ -46,6 +47,30 @@
       pointer-events:none; z-index:1;
     }
 
+.top-row {
+  display:-webkit-flex;
+  display:flex;
+  -webkit-flex-direction:row;
+  flex-direction:row;
+  -webkit-flex:1;
+  flex:1;
+  min-height:0;
+  position:relative;
+  z-index:2;
+}
+
+.bottom-row {
+  display:-webkit-flex;
+  display:flex;
+  -webkit-flex-direction:row;
+  flex-direction:row;
+  -webkit-flex:2;
+  flex:2;
+  min-height:0;
+  position:relative;
+  z-index:2;
+}
+    
     /* HEADER */
     .header {
   display:none;
@@ -62,7 +87,8 @@
 
     /* HORA */
     .time-block {
-  grid-area:time;
+  -webkit-flex:3;
+  flex:3;
   display:-webkit-flex;
   display:flex;
   -webkit-flex-direction:column;
@@ -71,12 +97,12 @@
   align-items:center;
   -webkit-justify-content:center;
   justify-content:center;
-  position:relative;
-  z-index:2;
-  border-bottom-width:1px;
-  border-bottom-style:solid;
   border-right-width:1px;
   border-right-style:solid;
+  border-bottom-width:0;
+  position:relative;
+  z-index:2;
+  min-width:0;
 }
 
     .lcd-wrap { position:relative; display:inline-block; line-height:1; }
@@ -100,20 +126,18 @@
     .date-chip { font-size:3vw; letter-spacing:0.22em; text-transform:uppercase; }
 
     /* DOS COLUMNAS */
-    .bottom {
-  display:contents;
-}
-
+    
 .weather-panel {
-  grid-area:weather;
-  border-bottom-width:1px;
-  border-bottom-style:solid;
+  -webkit-flex:1;
+  flex:1;
   padding:1.5vh 2vw;
   overflow:hidden;
+  min-width:0;
 }
 
 .calendar-placeholder {
-  grid-area:main;
+  -webkit-flex:3;
+  flex:3;
   padding:1.5vh 2vw;
   overflow:hidden;
   display:-webkit-flex;
@@ -124,12 +148,17 @@
   justify-content:center;
   font-size:2vw;
   letter-spacing:0.2em;
+  min-width:0;
+  border-right-width:1px;
+  border-right-style:solid;
 }
 
 .agenda-panel {
-  grid-area:agenda;
+  -webkit-flex:1;
+  flex:1;
   padding:1.5vh 2vw;
   overflow:hidden;
+  min-width:0;
 }
     
     .panel {
@@ -208,11 +237,14 @@
     </div>
   </div>
 
+  <div class="top-row">
+
   <div class="time-block" id="time-block">
     <div class="lcd-wrap">
       <div class="lcd-ghost" id="clock-ghost">88<span>:</span>88</div>
-      <div class="lcd-real"  id="clock-real">00<span class="sep-blink">:</span>00</div>
+      <div class="lcd-real" id="clock-real">00<span class="sep-blink">:</span>00</div>
     </div>
+
     <div class="date-row">
       <div class="date-chip" id="date-day">DOM</div>
       <div class="date-chip" id="date-full">--</div>
@@ -220,22 +252,26 @@
   </div>
 
   <div class="panel weather-panel" id="panel-left">
-  <div class="panel-label" id="panel-label-left">CLIMA</div>
-  <div id="weather-section">
-    <div class="msg" id="w-msg">LOADING_</div>
+    <div class="panel-label" id="panel-label-left">CLIMA</div>
+    <div id="weather-section">
+      <div class="msg" id="w-msg">LOADING_</div>
+    </div>
   </div>
+
 </div>
 
-<div class="calendar-placeholder" id="calendar-placeholder">
-  CALENDÁRIO
-</div>
+<div class="bottom-row">
 
-<div class="panel agenda-panel" id="panel-right">
-  <div class="panel-label" id="panel-label-right">PRÓXIMOS 7 DIAS</div>
-  <div class="ev-list" id="agenda-list">
-    <div class="msg">LOADING_</div>
+  <div class="calendar-placeholder" id="calendar-placeholder">
+    CALENDÁRIO
   </div>
-</div>
+
+  <div class="panel agenda-panel" id="panel-right">
+    <div class="panel-label" id="panel-label-right">PRÓXIMOS 7 DIAS</div>
+    <div class="ev-list" id="agenda-list">
+      <div class="msg">LOADING_</div>
+    </div>
+  </div>
 
 </div>
 
