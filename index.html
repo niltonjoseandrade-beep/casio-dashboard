@@ -87,8 +87,11 @@
 
     /* HORA */
     .time-block {
-  -webkit-flex:3;
-  flex:3;
+  width:75%;
+  -webkit-flex:none;
+  flex:none;
+  box-sizing:border-box;
+
   display:-webkit-flex;
   display:flex;
   -webkit-flex-direction:column;
@@ -97,9 +100,11 @@
   align-items:center;
   -webkit-justify-content:center;
   justify-content:center;
+
   border-right-width:1px;
   border-right-style:solid;
   border-bottom-width:0;
+
   position:relative;
   z-index:2;
   min-width:0;
@@ -128,34 +133,46 @@
     /* DOS COLUMNAS */
     
 .weather-panel {
-  -webkit-flex:1;
-  flex:1;
+  width:25%;
+  -webkit-flex:none;
+  flex:none;
+  box-sizing:border-box;
+
   padding:1.5vh 2vw;
   overflow:hidden;
   min-width:0;
 }
 
 .calendar-placeholder {
-  -webkit-flex:3;
-  flex:3;
+  width:75%;
+  -webkit-flex:none;
+  flex:none;
+  box-sizing:border-box;
+
   padding:1.5vh 2vw;
   overflow:hidden;
+
   display:-webkit-flex;
   display:flex;
   -webkit-align-items:center;
   align-items:center;
   -webkit-justify-content:center;
   justify-content:center;
+
   font-size:2vw;
   letter-spacing:0.2em;
+
   min-width:0;
   border-right-width:1px;
   border-right-style:solid;
 }
 
 .agenda-panel {
-  -webkit-flex:1;
-  flex:1;
+  width:25%;
+  -webkit-flex:none;
+  flex:none;
+  box-sizing:border-box;
+
   padding:1.5vh 2vw;
   overflow:hidden;
   min-width:0;
