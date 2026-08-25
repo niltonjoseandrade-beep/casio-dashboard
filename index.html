@@ -241,10 +241,28 @@
 
 .calendar-day.today {
   font-weight:bold;
-  color:#FF0000 !important;
-  background-color:#FFFFFF !important;
 }
 
+.calendar-day.today span:first-child {
+  width:2.5vw;
+  height:2.5vw;
+
+  display:-webkit-flex;
+  display:flex;
+
+  -webkit-align-items:center;
+  align-items:center;
+
+  -webkit-justify-content:center;
+  justify-content:center;
+
+  border-width:1px;
+  border-style:solid;
+  border-radius:50%;
+
+  border-color:#B8D870;
+}
+    
 .event-dot {
   position:absolute;
 
@@ -794,22 +812,6 @@ var dayColor =
 var numberStyle =
   'color:'+dayColor+';';
 
-if (
-  i===today.getDate() &&
-  calendarMonth===today.getMonth() &&
-  calendarYear===today.getFullYear()
-) {
-
-  numberStyle +=
-    'border:1px solid '+dayColor+';'+
-    'border-radius:50%;'+
-    'width:2.5vw;'+
-    'height:2.5vw;'+
-    'display:flex;'+
-    'align-items:center;'+
-    'justify-content:center;';
-}
-
 day.innerHTML =
   '<span style="'+numberStyle+'">'+i+'</span>';
 
@@ -900,14 +902,14 @@ grid.appendChild(day);
      * Dia de hoje
      */
     if (
-      days[j].className.indexOf('today') >= 0
-    ) {
+  days[j].className.indexOf('today') >= 0
+) {
 
-      if (spans.length > 0) {
-        spans[0].style.color = c.segOn;
-        spans[0].style.borderColor = c.segOn;
-      }
-    }
+  if (spans.length > 0) {
+    spans[0].style.color = c.segOn;
+    spans[0].style.borderColor = c.segOn;
+  }
+}
 
     /*
      * Ponto de evento
