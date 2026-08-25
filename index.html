@@ -143,7 +143,7 @@
   min-width:0;
 }
 
-.calendar-placeholder {
+.calendar-panel {
   width:75%;
   -webkit-flex:none;
   flex:none;
@@ -152,6 +152,14 @@
   padding:1.5vh 2vw;
   overflow:hidden;
 
+  border-right-width:1px;
+  border-right-style:solid;
+
+  min-width:0;
+}
+
+.calendar-title {
+  height:10%;
   display:-webkit-flex;
   display:flex;
   -webkit-align-items:center;
@@ -159,12 +167,93 @@
   -webkit-justify-content:center;
   justify-content:center;
 
-  font-size:2vw;
-  letter-spacing:0.2em;
+  font-size:1.5vw;
+  letter-spacing:0.25em;
+  text-transform:uppercase;
+}
 
-  min-width:0;
-  border-right-width:1px;
-  border-right-style:solid;
+.month-btn {
+  background:none;
+  border:0;
+  padding:0 1vw;
+
+  font-family:inherit;
+  font-size:2vw;
+  line-height:1;
+
+  color:inherit;
+  cursor:pointer;
+}
+
+.calendar-weekdays {
+  height:10%;
+
+  display:-webkit-flex;
+  display:flex;
+
+  font-size:0.8vw;
+  letter-spacing:0.15em;
+  text-align:center;
+}
+
+.calendar-weekdays div {
+  width:14.2857%;
+  box-sizing:border-box;
+}
+
+.calendar-grid {
+  height:80%;
+
+  display:-webkit-flex;
+  display:flex;
+  -webkit-flex-wrap:wrap;
+  flex-wrap:wrap;
+
+  align-content:flex-start;
+  -webkit-align-content:flex-start;
+
+  text-align:center;
+}
+
+.calendar-day {
+  width:14.2857%;
+  height:16.6667%;
+
+  box-sizing:border-box;
+
+  display:-webkit-flex;
+  display:flex;
+  -webkit-align-items:center;
+  align-items:center;
+  -webkit-justify-content:center;
+  justify-content:center;
+
+  font-size:1.4vw;
+  position:relative;
+}
+
+.calendar-day.other-month {
+  opacity:0.25;
+}
+
+.calendar-day.today {
+  font-weight:bold;
+}
+
+.calendar-day.today span {
+  border-width:1px;
+  border-style:solid;
+  border-radius:50%;
+
+  width:2.5vw;
+  height:2.5vw;
+
+  display:-webkit-flex;
+  display:flex;
+  -webkit-align-items:center;
+  align-items:center;
+  -webkit-justify-content:center;
+  justify-content:center;
 }
 
 .agenda-panel {
@@ -279,9 +368,29 @@
 
 <div class="bottom-row">
 
-  <div class="calendar-placeholder" id="calendar-placeholder">
-    CALENDÁRIO
+  <div class="calendar-panel" id="calendar-panel">
+
+  <div class="calendar-title">
+    <button class="month-btn" id="month-prev" type="button">&lsaquo;</button>
+
+    <span id="calendar-month">AGOSTO 2026</span>
+
+    <button class="month-btn" id="month-next" type="button">&rsaquo;</button>
   </div>
+
+  <div class="calendar-weekdays">
+    <div>SEG</div>
+    <div>TER</div>
+    <div>QUA</div>
+    <div>QUI</div>
+    <div>SEX</div>
+    <div>SÁB</div>
+    <div>DOM</div>
+  </div>
+
+  <div class="calendar-grid" id="calendar-grid"></div>
+
+</div>
 
   <div class="panel agenda-panel" id="panel-right">
     <div class="panel-label" id="panel-label-right">PRÓXIMOS 7 DIAS</div>
@@ -360,20 +469,20 @@
 
   function applyTheme(t) {
     var c = THEMES[t];
-    // Body
+
     document.body.style.backgroundColor = c.bodyBg;
-    // Watch
+
     var w = document.getElementById('watch');
     w.style.backgroundColor = c.screenBg;
     w.style.borderColor = c.border;
     w.style.backgroundImage = 'repeating-linear-gradient(0deg,'+c.scanline+' 0px,'+c.scanline+' 1px,transparent 1px,transparent 3px)';
-    // Inner border
+
     document.getElementById('watch-inner').style.borderColor = c.segOff;
-    // Header
+
     var header = document.getElementById('header');
     header.style.borderBottomColor = c.segOff;
     colorEls('h-label', c.label);
-    // Mode buttons
+
     var btnIds = ['green','blue','mono'];
     for (var i=0;i<btnIds.length;i++) {
       var btn = document.getElementById('btn-'+btnIds[i]);
@@ -382,35 +491,41 @@
         btn.style.borderColor = btnIds[i]===t ? c.segDim : c.segOff;
       }
     }
-    // Time block
+
     document.getElementById('time-block').style.borderBottomColor = c.segOff;
-    // Clock ghost/real
+
     document.getElementById('clock-ghost').style.color = c.segOff;
+
     var cr = document.getElementById('clock-real');
     cr.style.color = c.segOn;
     cr.style.textShadow = '0 0 16px '+c.glow+', 0 0 40px '+c.glow;
-    // Date chips
+
     colorEls('date-chip', c.segDim);
+
     var df = document.getElementById('date-full');
     if (df) df.style.color = c.segOn;
-    // Panels
+
     document.getElementById('panel-left').style.borderRightColor = c.segOff;
+
     colorEls('panel-label', c.label);
+
     document.getElementById('panel-label-left').style.borderBottomColor = c.segOff;
     document.getElementById('panel-label-right').style.borderBottomColor = c.segOff;
-    // Weather
+
     applyWeatherColors(c);
-    // Agenda
     applyAgendaColors(c);
-    // Store
+
     window._theme = t;
     window._colors = c;
+
     localStorage.setItem('casio-theme', t);
   }
 
   function colorEls(cls, color) {
     var els = document.getElementsByClassName(cls);
-    for (var i=0;i<els.length;i++) els[i].style.color = color;
+    for (var i=0;i<els.length;i++) {
+      els[i].style.color = color;
+    }
   }
 
   function applyWeatherColors(c) {
@@ -418,20 +533,40 @@
     var tr = document.querySelector('.temp-real');
     var wd = document.querySelector('.w-desc');
     var wm = document.querySelector('.w-meta');
+
     if (tg) tg.style.color = c.segOff;
-    if (tr) { tr.style.color = c.segOn; tr.style.textShadow = '0 0 12px '+c.glow; }
+
+    if (tr) {
+      tr.style.color = c.segOn;
+      tr.style.textShadow = '0 0 12px '+c.glow;
+    }
+
     if (wd) wd.style.color = c.segDim;
-    if (wm) { wm.style.color = c.label; colorBolds(wm, c.segOn); }
+
+    if (wm) {
+      wm.style.color = c.label;
+      colorBolds(wm, c.segOn);
+    }
+
     var msg = document.getElementById('w-msg');
     if (msg) msg.style.color = c.segDim;
   }
 
   function applyAgendaColors(c) {
     var evs = document.getElementsByClassName('ev');
-    for (var i=0;i<evs.length;i++) evs[i].style.borderColor = c.segOff;
+
+    for (var i=0;i<evs.length;i++) {
+      evs[i].style.borderColor = c.segOff;
+    }
+
     colorEls('ev-date', c.segDim);
+
     var todays = document.getElementsByClassName('ev-date today');
-    for (var i=0;i<todays.length;i++) todays[i].style.color = c.segOn;
+
+    for (var i=0;i<todays.length;i++) {
+      todays[i].style.color = c.segOn;
+    }
+
     colorEls('ev-time', c.label);
     colorEls('ev-title', c.segOn);
     colorEls('ev-cal', c.label);
@@ -440,119 +575,518 @@
 
   function colorBolds(el, color) {
     var bs = el.getElementsByTagName('b');
-    for (var i=0;i<bs.length;i++) bs[i].style.color = color;
-  }
 
-  function setTheme(t) { applyTheme(t); }
-
-  // ── RELOJ ─────────────────────────────────────────────────
-  function pad(n){ return n<10?'0'+n:''+n; }
-
-  function updateClock() {
-    var now=new Date();
-    document.getElementById('clock-real').innerHTML =
-      pad(now.getHours())+'<span class="sep-blink">:</span>'+pad(now.getMinutes());
-    document.getElementById('clock-ghost').innerHTML = '88<span>:</span>88';
-    document.getElementById('seconds').textContent = pad(now.getSeconds());
-    document.getElementById('date-day').textContent = DIAS[now.getDay()];
-    document.getElementById('date-full').textContent =
-      pad(now.getDate())+'-'+MESES[now.getMonth()]+'-'+now.getFullYear();
-    // Re-aplicar color de fecha
-    if (window._colors) {
-      document.getElementById('date-day').style.color  = window._colors.segDim;
-      document.getElementById('date-full').style.color = window._colors.segOn;
-      document.getElementById('clock-ghost').style.color = window._colors.segOff;
-      var cr = document.getElementById('clock-real');
-      cr.style.color = window._colors.segOn;
-      cr.style.textShadow = '0 0 16px '+window._colors.glow+', 0 0 40px '+window._colors.glow;
-      document.getElementById('seconds').style.color = window._colors.label;
+    for (var i=0;i<bs.length;i++) {
+      bs[i].style.color = color;
     }
   }
 
+  function setTheme(t) {
+    applyTheme(t);
+  }
+
+
+  // ── CALENDÁRIO MENSAL ─────────────────────────────────────
+
+  var calendarYear;
+  var calendarMonth;
+
+  function initCalendar() {
+
+    var now = new Date();
+
+    calendarYear = now.getFullYear();
+    calendarMonth = now.getMonth();
+
+    renderCalendar();
+
+    var prev = document.getElementById('month-prev');
+    var next = document.getElementById('month-next');
+
+    if (prev) {
+      prev.onclick = function() {
+
+        calendarMonth--;
+
+        if (calendarMonth < 0) {
+          calendarMonth = 11;
+          calendarYear--;
+        }
+
+        renderCalendar();
+      };
+    }
+
+    if (next) {
+      next.onclick = function() {
+
+        calendarMonth++;
+
+        if (calendarMonth > 11) {
+          calendarMonth = 0;
+          calendarYear++;
+        }
+
+        renderCalendar();
+      };
+    }
+  }
+
+  function renderCalendar() {
+
+    var monthNames = [
+      'JANEIRO',
+      'FEVEREIRO',
+      'MARÇO',
+      'ABRIL',
+      'MAIO',
+      'JUNHO',
+      'JULHO',
+      'AGOSTO',
+      'SETEMBRO',
+      'OUTUBRO',
+      'NOVEMBRO',
+      'DEZEMBRO'
+    ];
+
+    var title = document.getElementById('calendar-month');
+    var grid = document.getElementById('calendar-grid');
+
+    if (!title || !grid) {
+      return;
+    }
+
+    title.innerHTML =
+      monthNames[calendarMonth]+' '+calendarYear;
+
+    grid.innerHTML = '';
+
+    var firstDay =
+      new Date(calendarYear,calendarMonth,1);
+
+    var lastDay =
+      new Date(calendarYear,calendarMonth+1,0);
+
+    var startDay = firstDay.getDay();
+
+    /*
+     * JavaScript:
+     * domingo = 0
+     * segunda = 1
+     *
+     * Nosso calendário começa na segunda.
+     */
+
+    if (startDay === 0) {
+      startDay = 7;
+    }
+
+    var previousLastDay =
+      new Date(calendarYear,calendarMonth,0).getDate();
+
+    var i;
+
+    /*
+     * Dias do mês anterior.
+     */
+
+    for (i=startDay-1;i>0;i--) {
+
+      var previousDay =
+        previousLastDay-i+1;
+
+      var prev =
+        document.createElement('div');
+
+      prev.className =
+        'calendar-day other-month';
+
+      prev.innerHTML =
+        '<span>'+previousDay+'</span>';
+
+      grid.appendChild(prev);
+    }
+
+    /*
+     * Dias do mês atual.
+     */
+
+    var today = new Date();
+
+    for (i=1;i<=lastDay.getDate();i++) {
+
+      var day =
+        document.createElement('div');
+
+      day.className =
+        'calendar-day';
+
+      if (
+        i===today.getDate() &&
+        calendarMonth===today.getMonth() &&
+        calendarYear===today.getFullYear()
+      ) {
+
+        day.className += ' today';
+
+        day.innerHTML =
+          '<span>'+i+'</span>';
+
+      } else {
+
+        day.innerHTML =
+          '<span>'+i+'</span>';
+      }
+
+      grid.appendChild(day);
+    }
+
+    /*
+     * Completa até 42 células.
+     */
+
+    var totalCells =
+      grid.children.length;
+
+    var remaining =
+      42-totalCells;
+
+    for (i=1;i<=remaining;i++) {
+
+      var next =
+        document.createElement('div');
+
+      next.className =
+        'calendar-day other-month';
+
+      next.innerHTML =
+        '<span>'+i+'</span>';
+
+      grid.appendChild(next);
+    }
+
+    /*
+     * Reaplica a cor atual ao calendário.
+     */
+
+    if (window._colors) {
+      applyCalendarColors(window._colors);
+    }
+  }
+
+  function applyCalendarColors(c) {
+
+    var title =
+      document.getElementById('calendar-month');
+
+    if (title) {
+      title.style.color = c.segOn;
+    }
+
+    colorEls('calendar-weekdays', c.segDim);
+
+    var buttons =
+      document.getElementsByClassName('month-btn');
+
+    for (var i=0;i<buttons.length;i++) {
+      buttons[i].style.color = c.segDim;
+    }
+
+    var days =
+      document.getElementsByClassName('calendar-day');
+
+    for (var j=0;j<days.length;j++) {
+
+      days[j].style.color =
+        c.segOn;
+
+      if (
+        days[j].className.indexOf('other-month') >= 0
+      ) {
+        days[j].style.color =
+          c.segDim;
+      }
+    }
+  }
+
+
+  // ── RELOJ ─────────────────────────────────────────────────
+
+  function pad(n){
+    return n<10?'0'+n:''+n;
+  }
+
+  function updateClock() {
+
+    var now=new Date();
+
+    document.getElementById('clock-real').innerHTML =
+      pad(now.getHours())+
+      '<span class="sep-blink">:</span>'+
+      pad(now.getMinutes());
+
+    document.getElementById('clock-ghost').innerHTML =
+      '88<span>:</span>88';
+
+    document.getElementById('seconds').textContent =
+      pad(now.getSeconds());
+
+    document.getElementById('date-day').textContent =
+      DIAS[now.getDay()];
+
+    document.getElementById('date-full').textContent =
+      pad(now.getDate())+
+      '-'+
+      MESES[now.getMonth()]+
+      '-'+
+      now.getFullYear();
+
+    if (window._colors) {
+
+      document.getElementById('date-day').style.color =
+        window._colors.segDim;
+
+      document.getElementById('date-full').style.color =
+        window._colors.segOn;
+
+      document.getElementById('clock-ghost').style.color =
+        window._colors.segOff;
+
+      var cr =
+        document.getElementById('clock-real');
+
+      cr.style.color =
+        window._colors.segOn;
+
+      cr.style.textShadow =
+        '0 0 16px '+
+        window._colors.glow+
+        ', 0 0 40px '+
+        window._colors.glow;
+
+      document.getElementById('seconds').style.color =
+        window._colors.label;
+    }
+  }
+
+
   // ── CLIMA ─────────────────────────────────────────────────
+
   function fetchWeather() {
+
     var xhr=new XMLHttpRequest();
-    xhr.open('GET','/api/weather?lat='+LAT+'&lon='+LON,true);
+
+    xhr.open(
+      'GET',
+      '/api/weather?lat='+LAT+'&lon='+LON,
+      true
+    );
+
     xhr.onreadystatechange=function(){
+
       if(xhr.readyState!==4) return;
-      var el=document.getElementById('weather-section');
-      var c=window._colors||THEMES.green;
+
+      var el =
+        document.getElementById('weather-section');
+
+      var c =
+        window._colors||THEMES.green;
+
       if(xhr.status===200){
+
         try{
-          var d=JSON.parse(xhr.responseText),cw=d.current_weather;
-          var h=new Date().getHours();
-          var temp=Math.round(cw.temperature);
-          var sens=Math.round(d.hourly.apparent_temperature[h]!==undefined?d.hourly.apparent_temperature[h]:temp);
-          var hum=d.hourly.relativehumidity_2m[h]!==undefined?d.hourly.relativehumidity_2m[h]:'--';
-          var wind=Math.round(cw.windspeed);
+
+          var d =
+            JSON.parse(xhr.responseText);
+
+          var cw =
+            d.current_weather;
+
+          var h =
+            new Date().getHours();
+
+          var temp =
+            Math.round(cw.temperature);
+
+          var sens =
+            Math.round(
+              d.hourly.apparent_temperature[h]!==undefined
+              ? d.hourly.apparent_temperature[h]
+              : temp
+            );
+
+          var hum =
+            d.hourly.relativehumidity_2m[h]!==undefined
+            ? d.hourly.relativehumidity_2m[h]
+            : '--';
+
+          var wind =
+            Math.round(cw.windspeed);
+
           el.innerHTML=
             '<div class="temp-wrap">'+
               '<div class="temp-ghost" style="color:'+c.segOff+'">88!</div>'+
               '<div class="temp-real" style="color:'+c.segOn+';text-shadow:0 0 12px '+c.glow+'">'+temp+'<sup>°C</sup></div>'+
             '</div>'+
-            '<div class="w-desc" style="color:'+c.segDim+'">'+(WMO[cw.weathercode]||'--')+'</div>'+
-            '<div class="w-meta" style="color:'+c.label+'">SENSAÇÃO <b style="color:'+c.segOn+'">'+sens+'°</b> &nbsp; UMID <b style="color:'+c.segOn+'">'+hum+'%</b><br>VENTO <b style="color:'+c.segOn+'">'+wind+' KM/H</b></div>';
-        }catch(e){el.innerHTML='<div class="msg" style="color:'+c.segDim+'">NO DATA_</div>';}
-      }else{el.innerHTML='<div class="msg" style="color:'+c.segDim+'">NO DATA_</div>';}
+            '<div class="w-desc" style="color:'+c.segDim+'">'+
+              (WMO[cw.weathercode]||'--')+
+            '</div>'+
+            '<div class="w-meta" style="color:'+c.label+'">'+
+              'SENSAÇÃO <b style="color:'+c.segOn+'">'+sens+'°</b>'+
+              ' &nbsp; UMID <b style="color:'+c.segOn+'">'+hum+'%</b>'+
+              '<br>VENTO <b style="color:'+c.segOn+'">'+wind+' KM/H</b>'+
+            '</div>';
+
+        }catch(e){
+
+          el.innerHTML =
+            '<div class="msg" style="color:'+c.segDim+'">NO DATA_</div>';
+        }
+
+      }else{
+
+        el.innerHTML =
+          '<div class="msg" style="color:'+c.segDim+'">NO DATA_</div>';
+      }
     };
+
     xhr.send();
   }
 
-  // ── AGENDA ────────────────────────────────────────────────
-  var todayISO='';
-  function fetchAgenda(){
-    var xhr=new XMLHttpRequest();
-    xhr.open('GET','/api/calendar',true);
-    xhr.onreadystatechange=function(){
-      if(xhr.readyState!==4) return;
-      var list=document.getElementById('agenda-list');
-      var c=window._colors||THEMES.green;
-      if(xhr.status===200){
-        try{
-          var data=JSON.parse(xhr.responseText);
-          todayISO=data.today||'';
-          if(!data.events||data.events.length===0){
-            list.innerHTML='<div class="msg" style="color:'+c.segDim+'">NO EVENTS_</div>';return;
-          }
-          var html='';
-          for(var i=0;i<data.events.length;i++){
-            var ev=data.events[i];
-            var isToday=ev.date===todayISO;
-            var dateLabel=isToday?'HOJE':ev.dayLabel+' '+ev.dateNum;
-            var timeStr=ev.allDay?'DIA TODO':(ev.start+(ev.end?' > '+ev.end:''));
-            var dateColor=isToday?c.segOn:c.segDim;
-            html+='<div class="ev" style="border-color:'+c.segOff+'">'+
-              '<div class="ev-meta">'+
-                '<span class="ev-date" style="color:'+dateColor+'">'+esc(dateLabel)+'</span>'+
-                '<span class="ev-time" style="color:'+c.label+'">'+timeStr+'</span>'+
-                '<span class="ev-cal"  style="color:'+c.label+'">'+esc(ev.calendar.toUpperCase())+'</span>'+
-              '</div>'+
-              '<div class="ev-title" style="color:'+c.segOn+'">'+esc(ev.title.toUpperCase())+'</div>'+
-            '</div>';
-          }
-          list.innerHTML=html;
-        }catch(e){list.innerHTML='<div class="msg" style="color:'+c.segDim+'">ERR_</div>';}
-      } else {
-  list.innerHTML='<div class="msg" style="color:'+c.segDim+'">NO CONN_</div>';
-}
-};
-xhr.send();
-}
 
- 
-  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  // ── AGENDA ────────────────────────────────────────────────
+
+  var todayISO='';
+
+  function fetchAgenda(){
+
+    var xhr=new XMLHttpRequest();
+
+    xhr.open('GET','/api/calendar',true);
+
+    xhr.onreadystatechange=function(){
+
+      if(xhr.readyState!==4) return;
+
+      var list =
+        document.getElementById('agenda-list');
+
+      var c =
+        window._colors||THEMES.green;
+
+      if(xhr.status===200){
+
+        try{
+
+          var data =
+            JSON.parse(xhr.responseText);
+
+          todayISO =
+            data.today||'';
+
+          if(!data.events||data.events.length===0){
+
+            list.innerHTML =
+              '<div class="msg" style="color:'+c.segDim+'">NO EVENTS_</div>';
+
+            return;
+          }
+
+          var html='';
+
+          for(var i=0;i<data.events.length;i++){
+
+            var ev =
+              data.events[i];
+
+            var isToday =
+              ev.date===todayISO;
+
+            var dateLabel =
+              isToday
+              ? 'HOJE'
+              : ev.dayLabel+' '+ev.dateNum;
+
+            var timeStr =
+              ev.allDay
+              ? 'DIA TODO'
+              : (ev.start+(ev.end?' > '+ev.end:''));
+
+            var dateColor =
+              isToday
+              ? c.segOn
+              : c.segDim;
+
+            html+=
+              '<div class="ev" style="border-color:'+c.segOff+'">'+
+                '<div class="ev-meta">'+
+                  '<span class="ev-date" style="color:'+dateColor+'">'+
+                    esc(dateLabel)+
+                  '</span>'+
+                  '<span class="ev-time" style="color:'+c.label+'">'+
+                    timeStr+
+                  '</span>'+
+                  '<span class="ev-cal" style="color:'+c.label+'">'+
+                    esc(ev.calendar.toUpperCase())+
+                  '</span>'+
+                '</div>'+
+                '<div class="ev-title" style="color:'+c.segOn+'">'+
+                  esc(ev.title.toUpperCase())+
+                '</div>'+
+              '</div>';
+          }
+
+          list.innerHTML=html;
+
+        }catch(e){
+
+          list.innerHTML =
+            '<div class="msg" style="color:'+c.segDim+'">ERR_</div>';
+        }
+
+      }else{
+
+        list.innerHTML =
+          '<div class="msg" style="color:'+c.segDim+'">NO CONN_</div>';
+      }
+    };
+
+    xhr.send();
+  }
+
+
+  function esc(s){
+    return String(s)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;');
+  }
+
 
   // ── INIT ──────────────────────────────────────────────────
-  var savedTheme = localStorage.getItem('casio-theme')||'green';
+
+  var savedTheme =
+    localStorage.getItem('casio-theme')||'green';
+
   applyTheme(savedTheme);
+
+  initCalendar();
 
   updateClock();
   setInterval(updateClock,1000);
+
   fetchWeather();
   setInterval(fetchWeather,10*60*1000);
+
   fetchAgenda();
   setInterval(fetchAgenda,15*60*1000);
-  document.addEventListener('touchstart',function(){},false);
+
+  document.addEventListener(
+    'touchstart',
+    function(){},
+    false
+  );
+
 </script>
 </body>
 </html>
