@@ -149,6 +149,8 @@
   flex:none;
   box-sizing:border-box;
 
+  height:100%;
+
   padding:1.5vh 2vw;
   overflow:hidden;
 
@@ -203,6 +205,7 @@
 
 .calendar-grid {
   height:80%;
+  min-height:0;
 
   display:-webkit-flex;
   display:flex;
@@ -726,10 +729,22 @@ var monthEvents = [];
       day.className =
         'calendar-day';
 
-      var dateKey =
+      var monthNumber = calendarMonth + 1;
+
+if (monthNumber < 10) {
+  monthNumber = '0' + monthNumber;
+}
+
+var dayNumber = i;
+
+if (dayNumber < 10) {
+  dayNumber = '0' + dayNumber;
+}
+
+var dateKey =
   calendarYear+'-'+
-  pad(calendarMonth+1)+'-'+
-  pad(i);
+  monthNumber+'-'+
+  dayNumber;
 
 var hasEvent = false;
 
