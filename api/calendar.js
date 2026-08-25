@@ -13,8 +13,8 @@ const ICS_CALENDARS = [
   process.env.CAL_ICS_2 && {
     name: process.env.CAL_NAME_2 || 'Calendar 2',
     url: process.env.CAL_ICS_2
+  }
 ].filter(Boolean);
-
 // Google Apps Script
 const APPS_SCRIPT_URL =
   process.env.CAL_APPS_SCRIPT_URL || null;
