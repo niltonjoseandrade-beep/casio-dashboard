@@ -379,13 +379,13 @@
   </div>
 
   <div class="calendar-weekdays">
-    <div>SEG</div>
-    <div>TER</div>
-    <div>QUA</div>
-    <div>QUI</div>
-    <div>SEX</div>
-    <div>SÁB</div>
     <div>DOM</div>
+<div>SEG</div>
+<div>TER</div>
+<div>QUA</div>
+<div>QUI</div>
+<div>SEX</div>
+<div>SÁB</div>
   </div>
 
   <div class="calendar-grid" id="calendar-grid"></div>
@@ -668,18 +668,6 @@
       new Date(calendarYear,calendarMonth+1,0);
 
     var startDay = firstDay.getDay();
-
-    /*
-     * JavaScript:
-     * domingo = 0
-     * segunda = 1
-     *
-     * Nosso calendário começa na segunda.
-     */
-
-    if (startDay === 0) {
-      startDay = 7;
-    }
 
     var previousLastDay =
       new Date(calendarYear,calendarMonth,0).getDate();
