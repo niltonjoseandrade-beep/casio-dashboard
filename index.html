@@ -775,6 +775,17 @@ if (
 
 }
 
+if (i === 24) {
+  console.log(
+    'ELEMENTO DIA 24:',
+    day,
+    'CLASSE:',
+    day.className,
+    'HTML:',
+    day.innerHTML
+  );
+}
+      
 var dayColor =
   window._colors
   ? window._colors.segOn
@@ -807,6 +818,9 @@ if (hasEvent) {
   day.innerHTML +=
     '<span class="event-dot" style="background-color:'+dayColor+';"></span>';
 }
+      
+grid.appendChild(day);
+      
     }
       
     /*
