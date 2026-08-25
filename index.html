@@ -752,6 +752,17 @@ for (var e=0;e<eventsForCalendar.length;e++) {
   }
 }
 
+console.log(
+  'TESTE DIA:',
+  i,
+  'É DIA?',
+  i===today.getDate(),
+  'É MÊS?',
+  calendarMonth===today.getMonth(),
+  'É ANO?',
+  calendarYear===today.getFullYear()
+);
+      
 if (
   i===today.getDate() &&
   calendarMonth===today.getMonth() &&
