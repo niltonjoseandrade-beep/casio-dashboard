@@ -240,7 +240,7 @@
   font-weight:bold;
 }
 
-.calendar-day.today span {
+.calendar-day.today span:first-child {
   border-width:1px;
   border-style:solid;
   border-radius:50%;
@@ -256,6 +256,22 @@
   justify-content:center;
 }
 
+.event-dot {
+  position:absolute;
+
+  bottom:12%;
+  left:50%;
+
+  width:0.45vw;
+  height:0.45vw;
+
+  margin-left:-0.225vw;
+
+  border-radius:50%;
+
+  background-color:currentColor;
+}
+    
 .agenda-panel {
   width:25%;
   -webkit-flex:none;
@@ -589,7 +605,8 @@
   // ── CALENDÁRIO MENSAL ─────────────────────────────────────
 
   var calendarYear;
-  var calendarMonth;
+var calendarMonth;
+var monthEvents = [];
 
   function initCalendar() {
 
@@ -709,25 +726,39 @@
       day.className =
         'calendar-day';
 
-      if (
-        i===today.getDate() &&
-        calendarMonth===today.getMonth() &&
-        calendarYear===today.getFullYear()
-      ) {
+      var dateKey =
+  calendarYear+'-'+
+  pad(calendarMonth+1)+'-'+
+  pad(i);
 
-        day.className += ' today';
+var hasEvent = false;
 
-        day.innerHTML =
-          '<span>'+i+'</span>';
+for (var e=0;e<monthEvents.length;e++) {
 
-      } else {
+  if (monthEvents[e].date === dateKey) {
+    hasEvent = true;
+    break;
+  }
+}
 
-        day.innerHTML =
-          '<span>'+i+'</span>';
-      }
+if (
+  i===today.getDate() &&
+  calendarMonth===today.getMonth() &&
+  calendarYear===today.getFullYear()
+) {
 
-      grid.appendChild(day);
-    }
+  day.className += ' today';
+
+}
+
+day.innerHTML =
+  '<span>'+i+'</span>';
+
+if (hasEvent) {
+
+  day.innerHTML +=
+    '<span class="event-dot"></span>';
+}
 
     /*
      * Completa até 42 células.
@@ -971,6 +1002,8 @@
 
           todayISO =
             data.today||'';
+          monthEvents = data.monthEvents || [];
+          renderCalendar();
 
           if(!data.events||data.events.length===0){
 
