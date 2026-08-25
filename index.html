@@ -748,9 +748,11 @@ var dateKey =
 
 var hasEvent = false;
 
-for (var e=0;e<monthEvents.length;e++) {
+var eventsForCalendar = monthEvents || [];
 
-  if (monthEvents[e].date === dateKey) {
+for (var e=0;e<eventsForCalendar.length;e++) {
+
+  if (eventsForCalendar[e].date === dateKey) {
     hasEvent = true;
     break;
   }
