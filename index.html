@@ -121,9 +121,8 @@
       font-size:20vw; letter-spacing:0.04em; position:relative;
     }
     .sep-blink {
-      -webkit-animation:blink 1s step-end infinite;
-      animation:blink 1s step-end infinite;
-    }
+  opacity:1;
+}
     @-webkit-keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.06} }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.06} }
 
@@ -244,8 +243,8 @@
 }
 
 .calendar-day.today span:first-child {
-  width:2.5vw;
-  height:2.5vw;
+  width:3vw;
+  height:3vw;
 
   display:-webkit-flex;
   display:flex;
