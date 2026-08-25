@@ -235,6 +235,10 @@
   position:relative;
 }
 
+.calendar-day span:first-child {
+  color: #B8D870;
+}
+    
 .calendar-day.other-month {
   opacity:0.25;
 }
@@ -247,6 +251,9 @@
   border-width:1px;
   border-style:solid;
   border-radius:50%;
+
+  border-color:#B8D870;
+  color:#B8D870;
 
   width:2.5vw;
   height:2.5vw;
@@ -834,48 +841,53 @@ if (hasEvent) {
 
   for (var j=0;j<days.length;j++) {
 
-    /*
-     * Dias normais
-     */
-    days[j].style.color = c.segOn;
+    var spans =
+      days[j].getElementsByTagName('span');
 
     /*
-     * Dias do mês anterior/próximo
+     * Número do dia
      */
-    if (
-      days[j].className.indexOf('other-month') >= 0
-    ) {
-      days[j].style.color = c.segDim;
+    if (spans.length > 0) {
+
+      if (
+        days[j].className.indexOf('other-month') >= 0
+      ) {
+        spans[0].style.color = c.segDim;
+      } else {
+        spans[0].style.color = c.segOn;
+      }
     }
 
     /*
-     * Círculo do dia atual
+     * Dia de hoje
      */
     if (
       days[j].className.indexOf('today') >= 0
     ) {
 
-      var todayNumber =
-        days[j].getElementsByTagName('span')[0];
-
-      if (todayNumber) {
-        todayNumber.style.color = c.segOn;
-        todayNumber.style.borderColor = c.segOn;
+      if (spans.length > 0) {
+        spans[0].style.color = c.segOn;
+        spans[0].style.borderColor = c.segOn;
       }
     }
 
     /*
      * Ponto de evento
      */
-    var dots =
-      days[j].getElementsByClassName('event-dot');
+    if (spans.length > 1) {
 
-    for (var k=0;k<dots.length;k++) {
-      dots[k].style.backgroundColor = c.segOn;
+      for (var k=1;k<spans.length;k++) {
+
+        if (
+          spans[k].className.indexOf('event-dot') >= 0
+        ) {
+          spans[k].style.backgroundColor = c.segOn;
+          spans[k].style.color = c.segOn;
+        }
+      }
     }
   }
 }
-
 
   // ── RELOJ ─────────────────────────────────────────────────
 
