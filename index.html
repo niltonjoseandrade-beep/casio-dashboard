@@ -813,38 +813,68 @@ if (hasEvent) {
 
   function applyCalendarColors(c) {
 
-    var title =
-      document.getElementById('calendar-month');
+  var title =
+    document.getElementById('calendar-month');
 
-    if (title) {
-      title.style.color = c.segOn;
+  if (title) {
+    title.style.color = c.segOn;
+  }
+
+  colorEls('calendar-weekdays', c.segDim);
+
+  var buttons =
+    document.getElementsByClassName('month-btn');
+
+  for (var i=0;i<buttons.length;i++) {
+    buttons[i].style.color = c.segDim;
+  }
+
+  var days =
+    document.getElementsByClassName('calendar-day');
+
+  for (var j=0;j<days.length;j++) {
+
+    /*
+     * Dias normais
+     */
+    days[j].style.color = c.segOn;
+
+    /*
+     * Dias do mês anterior/próximo
+     */
+    if (
+      days[j].className.indexOf('other-month') >= 0
+    ) {
+      days[j].style.color = c.segDim;
     }
 
-    colorEls('calendar-weekdays', c.segDim);
+    /*
+     * Círculo do dia atual
+     */
+    if (
+      days[j].className.indexOf('today') >= 0
+    ) {
 
-    var buttons =
-      document.getElementsByClassName('month-btn');
+      var todayNumber =
+        days[j].getElementsByTagName('span')[0];
 
-    for (var i=0;i<buttons.length;i++) {
-      buttons[i].style.color = c.segDim;
-    }
-
-    var days =
-      document.getElementsByClassName('calendar-day');
-
-    for (var j=0;j<days.length;j++) {
-
-      days[j].style.color =
-        c.segOn;
-
-      if (
-        days[j].className.indexOf('other-month') >= 0
-      ) {
-        days[j].style.color =
-          c.segDim;
+      if (todayNumber) {
+        todayNumber.style.color = c.segOn;
+        todayNumber.style.borderColor = c.segOn;
       }
     }
+
+    /*
+     * Ponto de evento
+     */
+    var dots =
+      days[j].getElementsByClassName('event-dot');
+
+    for (var k=0;k<dots.length;k++) {
+      dots[k].style.backgroundColor = c.segOn;
+    }
   }
+}
 
 
   // ── RELOJ ─────────────────────────────────────────────────
